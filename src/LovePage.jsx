@@ -242,7 +242,7 @@ export default function LovePage() {
 
         {/* ✍️ Firma */}
         <footer className="mt-10 text-center text-sm text-rose-600">
-          Hecho con mucho amor por Junior • <span className="font-medium">para {NOMBRE}</span>
+          Hecho con mucho amor por Junior 💞 <span className="font-medium"></span>
         </footer>
       </main>
     </div>
