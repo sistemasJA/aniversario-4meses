@@ -51,64 +51,11 @@ function diasJuntos() {
   return diff;
 }
 
-// 💬 Efecto de escritura para mensajes románticos
-function MensajeSorpresa({
-  text = "Eres mi razón favorita para sonreír 💫",
-  speed = 60,
-  startDelay = 400,
-  loop = false,
-  className = "",
-  cursor = true,
-}) {
-  const [shown, setShown] = useState("");
-  useEffect(() => {
-    let i = 0;
-    let timeoutId;
-    let intervalId;
-    const start = () => {
-      intervalId = setInterval(() => {
-        i++;
-        setShown(text.slice(0, i));
-        if (i >= text.length) {
-          clearInterval(intervalId);
-          if (loop) {
-            timeoutId = setTimeout(() => {
-              i = 0;
-              setShown("");
-              start();
-            }, 1200);
-          }
-        }
-      }, speed);
-    };
-    timeoutId = setTimeout(start, startDelay);
-    return () => {
-      clearTimeout(timeoutId);
-      clearInterval(intervalId);
-    };
-  }, [text, speed, startDelay, loop]);
-
-  const lines = shown.split("\n");
-  return (
-    <div className={`text-center text-rose-700 text-xl sm:text-2xl ${className}`}>
-      {lines.map((line, idx) => (
-        <span key={idx}>
-          {line}
-          {idx < lines.length - 1 && <br />}
-        </span>
-      ))}
-      {cursor && (
-        <span className="ml-1 inline-block w-[10px] h-6 align-middle bg-rose-600 animate-pulse opacity-80" />
-      )}
-    </div>
-  );
-}
-
 export default function LovePage() {
   // 🎵 Control del audio
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef(null);
-  const audioSrc = new URL("mi-nina-bonita.mp3", import.meta.env.BASE_URL).toString(); // ruta correcta para GitHub Pages
+  const audioSrc = new URL("mi-nina-bonita.mp3", import.meta.env.BASE_URL).toString();
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -139,7 +86,7 @@ export default function LovePage() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-rose-50 via-pink-50 to-rose-100 text-rose-900 relative overflow-hidden">
-      {/* 🎵 Reproductor de fondo (uno solo) */}
+      {/* 🎵 Reproductor de fondo */}
       <audio ref={audioRef} src={audioSrc} loop preload="auto" />
 
       {/* 💖 Corazones flotantes */}
@@ -180,15 +127,6 @@ export default function LovePage() {
             </div>
           </div>
         </section>
-
-        {/* ✨ Mensaje sorpresa con efecto de escritura */}
-        <MensajeSorpresa
-          text={"Desde que llegaste a mi vida,\nmi mundo es más bonito contigo 💖"}
-          speed={60}
-          startDelay={800}
-          loop={false}
-          className="mt-6 mb-2"
-        />
 
         {/* 📸 Galería de fotos */}
         <section className="mb-8">
