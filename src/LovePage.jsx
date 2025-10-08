@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
-
+import React, { useState, useRef, useEffect } from "react";
 
 // 💌 Personaliza aquí
-const NOMBRE = "mi amor"; // cambia por su nombre ❤️
+const NOMBRE = "mi amor";
 
-// ⬇️ Importa tus fotos locales (ajusta nombres si usas otros)
+// ⬇️ Importa tus fotos locales
 import f1 from "./assets/foto-1.jpg";
 import f2 from "./assets/foto-2.jpg";
 import f3 from "./assets/foto-3.jpg";
@@ -15,8 +14,8 @@ import f6 from "./assets/foto-6.jpg";
 
 // Galería con tus imágenes
 const fotos = [
-  { url: f1, alt: "", pos: "50% 8%" },   // sube el foco (más arriba)
-  { url: f2, alt: "", pos: "50% 12%" },  // ajusta según veas
+  { url: f1, alt: "", pos: "50% 8%" },
+  { url: f2, alt: "", pos: "50% 12%" },
   { url: f3, alt: "" },
   { url: f4, alt: "" },
   { url: f5, alt: "" },
@@ -61,13 +60,11 @@ function MensajeSorpresa({
   className = "",
   cursor = true,
 }) {
-  const [shown, setShown] = React.useState("");
-
-  React.useEffect(() => {
+  const [shown, setShown] = useState("");
+  useEffect(() => {
     let i = 0;
     let timeoutId;
     let intervalId;
-
     const start = () => {
       intervalId = setInterval(() => {
         i++;
@@ -84,7 +81,6 @@ function MensajeSorpresa({
         }
       }, speed);
     };
-
     timeoutId = setTimeout(start, startDelay);
     return () => {
       clearTimeout(timeoutId);
@@ -93,7 +89,6 @@ function MensajeSorpresa({
   }, [text, speed, startDelay, loop]);
 
   const lines = shown.split("\n");
-
   return (
     <div className={`text-center text-rose-700 text-xl sm:text-2xl ${className}`}>
       {lines.map((line, idx) => (
@@ -109,11 +104,11 @@ function MensajeSorpresa({
   );
 }
 
-
 export default function LovePage() {
   // 🎵 Control del audio
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef(null);
+  const audioSrc = new URL("mi-nina-bonita.mp3", import.meta.env.BASE_URL).toString(); // ruta correcta para GitHub Pages
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -125,7 +120,6 @@ export default function LovePage() {
         setIsPlaying(true);
       } catch {
         setIsPlaying(false);
-        // Cuando toque la pantalla o haga clic, intentamos reproducir
         const onFirstInteract = () => {
           audioRef.current?.play().then(() => setIsPlaying(true));
           window.removeEventListener("pointerdown", onFirstInteract);
@@ -133,22 +127,20 @@ export default function LovePage() {
         window.addEventListener("pointerdown", onFirstInteract, { once: true });
       }
     };
-
     tryPlay();
   }, []);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
+    if (isPlaying) audioRef.current.pause();
+    else audioRef.current.play();
     setIsPlaying(!isPlaying);
   };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-rose-50 via-pink-50 to-rose-100 text-rose-900 relative overflow-hidden">
+      {/* 🎵 Reproductor de fondo (uno solo) */}
+      <audio ref={audioRef} src={audioSrc} loop preload="auto" />
 
       {/* 💖 Corazones flotantes */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -169,7 +161,6 @@ export default function LovePage() {
 
       {/* 🌸 Contenido principal */}
       <main className="relative mx-auto max-w-5xl px-4 py-10 sm:py-14">
-
         {/* 🗓️ Encabezado */}
         <section className="mb-8">
           <div className="mx-auto rounded-2xl bg-white/80 shadow-xl backdrop-blur p-6 sm:p-8">
@@ -190,6 +181,14 @@ export default function LovePage() {
           </div>
         </section>
 
+        {/* ✨ Mensaje sorpresa con efecto de escritura */}
+        <MensajeSorpresa
+          text={"Desde que llegaste a mi vida,\nmi mundo es más bonito contigo 💖"}
+          speed={60}
+          startDelay={800}
+          loop={false}
+          className="mt-6 mb-2"
+        />
 
         {/* 📸 Galería de fotos */}
         <section className="mb-8">
@@ -213,7 +212,6 @@ export default function LovePage() {
                     style={{ objectPosition: f.pos || "50% 50%" }}
                     loading="lazy"
                   />
-
                   <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent text-white text-sm p-2">
                     {f.alt ?? "Juntos"}
                   </figcaption>
@@ -246,11 +244,11 @@ export default function LovePage() {
           </div>
         </section>
 
+        {/* 💘 Contador de amor */}
         <div className="mt-8 text-center text-rose-700 text-lg sm:text-xl">
           Han pasado <span className="font-bold text-rose-600">{diasJuntos()}</span> días desde que empezó nuestra historia 💘
         </div>
 
-        {/* 🎵 Botón y reproductor */}
         {/* 🎵 Botón corazón animado */}
         <motion.button
           onClick={togglePlay}
@@ -278,7 +276,6 @@ export default function LovePage() {
               />
             </>
           )}
-
           <motion.svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -289,14 +286,14 @@ export default function LovePage() {
             animate={
               isPlaying
                 ? {
-                  scale: [1, 1.18, 1],
-                  filter: [
-                    "drop-shadow(0 0 0px rgba(255,0,90,0.0))",
-                    "drop-shadow(0 0 12px rgba(255,0,90,0.7))",
-                    "drop-shadow(0 0 0px rgba(255,0,90,0.0))",
-                  ],
-                  rotate: [0, -2, 0, 2, 0],
-                }
+                    scale: [1, 1.18, 1],
+                    filter: [
+                      "drop-shadow(0 0 0px rgba(255,0,90,0.0))",
+                      "drop-shadow(0 0 12px rgba(255,0,90,0.7))",
+                      "drop-shadow(0 0 0px rgba(255,0,90,0.0))",
+                    ],
+                    rotate: [0, -2, 0, 2, 0],
+                  }
                 : { scale: 1, filter: "drop-shadow(0 0 0 rgba(0,0,0,0))", rotate: 0 }
             }
             transition={{ duration: 1.1, repeat: isPlaying ? Infinity : 0, ease: "easeInOut" }}
@@ -305,16 +302,11 @@ export default function LovePage() {
           </motion.svg>
         </motion.button>
 
-        <audio ref={audioRef} src={`${import.meta.env.BASE_URL}mi-nina-bonita.mp3`} loop preload="auto" />
-
-
         {/* ✍️ Firma */}
         <footer className="mt-10 text-center text-sm text-rose-600">
-          <span className="font-medium"></span>
+          Hecho con mucho amor por Junior • <span className="font-medium">para {NOMBRE}</span>
         </footer>
       </main>
     </div>
   );
 }
-
-
