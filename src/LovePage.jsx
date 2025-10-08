@@ -55,7 +55,7 @@ export default function LovePage() {
   // 🎵 Control del audio
   const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef(null);
-  const audioSrc = new URL("mi-nina-bonita.mp3", import.meta.env.BASE_URL).toString();
+  const audioSrc = `${import.meta.env.BASE_URL}mi-nina-bonita.mp3`;
 
   useEffect(() => {
     if (!audioRef.current) return;
