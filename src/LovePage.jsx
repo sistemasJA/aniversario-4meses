@@ -116,10 +116,25 @@ export default function LovePage() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.4; // volumen suave
-      audioRef.current.play().catch(() => setIsPlaying(false)); // si el navegador bloquea autoplay
-    }
+    if (!audioRef.current) return;
+    audioRef.current.volume = 0.4;
+
+    const tryPlay = async () => {
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } catch {
+        setIsPlaying(false);
+        // Cuando toque la pantalla o haga clic, intentamos reproducir
+        const onFirstInteract = () => {
+          audioRef.current?.play().then(() => setIsPlaying(true));
+          window.removeEventListener("pointerdown", onFirstInteract);
+        };
+        window.addEventListener("pointerdown", onFirstInteract, { once: true });
+      }
+    };
+
+    tryPlay();
   }, []);
 
   const togglePlay = () => {
@@ -290,7 +305,7 @@ export default function LovePage() {
           </motion.svg>
         </motion.button>
 
-        <audio ref={audioRef} src="/mi-nina-bonita.mp3" loop preload="auto" />
+        <audio ref={audioRef} src={`${import.meta.env.BASE_URL}mi-nina-bonita.mp3`} loop preload="auto" />
 
 
         {/* ✍️ Firma */}
